@@ -19,6 +19,8 @@ import { Queue } from '~/utils/queue';
 import { Application } from './application';
 import { getUserAgentForURL } from './user-agent';
 
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+
 interface IAuthInfo {
   url: string;
 }
@@ -276,6 +278,11 @@ export class View {
 
     if (url.startsWith(NEWTAB_URL)) this.isNewTab = true;
 
+ 
+    this.webContents.session.setProxy({proxyRules: "https://localhost:8888", }).then(() => {
+      console.log("SUCCESS")
+    }).catch((e: any) => console.error(e))
+
     this.webContents.loadURL(url);
 
     this.browserView.setAutoResize({
@@ -284,6 +291,8 @@ export class View {
       horizontal: false,
       vertical: false,
     });
+
+    
   }
 
   public get webContents() {
